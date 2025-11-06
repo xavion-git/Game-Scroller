@@ -297,3 +297,85 @@ function draw() {
     // Restore context (remove camera transform)
     ctx.restore();
 }
+
+// ===== SHOW CUSTOMIZATION SCREEN =====
+function showCustomize() {
+    document.getElementById('win').style.display = 'none';
+    document.getElementById('customize').style.display = 'block';
+    document.getElementById('coinsAvailable').textContent = score;
+    setupCustomization();  // Create color buttons
+    updatePreview();       // Draw preview
+}
+
+// ===== CREATE COLOR SELECTION BUTTONS =====  
+function setupCustomization() {
+    // For each part (body, hat, eyes)
+    ['body', 'hat', 'eyes'].forEach(part => {
+        const container = document.getElementById(part + 'Colors');
+        container.innerHTML = '';  // Clear previous buttons
+        
+        // Create a button for each color option
+        colorOptions[part].forEach((option, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'color-btn';
+            btn.style.backgroundColor = option.color;
+            
+            // Mark currently selected color
+            if (characterColors[part] === option.color) {
+                btn.classList.add('selected');
+            }
+            
+            // If not unlocked, show cost and lock it
+            if (!option.unlocked) {
+                btn.classList.add('locked');
+                const cost = document.createElement('div');
+                cost.className = 'cost';
+                cost.textContent = option.cost + ' 💰';
+                btn.appendChild(cost);
+            }
+            
+            // Click handler
+            btn.onclick = () => selectColor(part, index);
+            container.appendChild(btn);
+        });
+    });
+}
+
+// ===== SELECT/PURCHASE A COLOR =====
+function selectColor(part, index) {
+    const option = colorOptions[part][index];
+    
+    // If not unlocked yet, try to purchase
+    if (!option.unlocked) {
+        if (score >= option.cost) {
+            // Purchase it!
+            score -= option.cost;
+            option.unlocked = true;
+            document.getElementById('coinsAvailable').textContent = score;
+            document.getElementById('score').textContent = score;
+        } else {
+            // Not enough coins
+            alert('Not enough coins! Need ' + option.cost + ' coins.');
+            return;
+        }
+    }
+    
+    // Apply the color
+    characterColors[part] = option.color;
+    setupCustomization();  // Refresh buttons (to show selection)
+    updatePreview();       // Update preview
+}
+
+// ===== UPDATE PREVIEW CANVAS =====
+function updatePreview() {
+    // Clear preview
+    previewCtx.fillStyle = '#5c94fc';
+    previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+    
+    // Draw character in center (bigger for preview)
+    drawCharacter(previewCtx, 45, 45, 30, 30);
+}
+
+function closeCustomize() {
+    document.getElementById('customize').style.display = 'none';
+}
