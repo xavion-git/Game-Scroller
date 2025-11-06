@@ -229,3 +229,71 @@ function update() {
     // --- UPDATE DISTANCE ---
     document.getElementById('distance').textContent = Math.floor(player.x / 10);
 }
+
+// ===== DRAW EVERYTHING =====
+function draw() {
+    // Clear screen
+    ctx.fillStyle = '#5c94fc';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Save context state
+    ctx.save();
+    
+    // Apply camera offset (this shifts everything)
+    ctx.translate(-camera.x, -camera.y);
+
+    // --- DRAW GOAL FLAG ---
+    ctx.fillStyle = '#000';
+    ctx.fillRect(goal.x, goal.y, 5, goal.height);  // Pole
+    ctx.fillStyle = '#FF0000';
+    ctx.beginPath();
+    ctx.moveTo(goal.x + 5, goal.y);
+    ctx.lineTo(goal.x + goal.width, goal.y + 20);
+    ctx.lineTo(goal.x + 5, goal.y + 40);
+    ctx.closePath();
+    ctx.fill();  // Flag
+
+    // --- DRAW PLATFORMS ---
+    ctx.fillStyle = '#8B4513';
+    platforms.forEach(platform => {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        // Add grass on top
+        ctx.fillStyle = '#228B22';
+        ctx.fillRect(platform.x, platform.y, platform.width, 5);
+        ctx.fillStyle = '#8B4513';
+    });
+
+    // --- DRAW COINS ---
+    coins.forEach(coin => {
+        if (!coin.collected) {
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(coin.x + coin.width/2, coin.y + coin.height/2, 
+                    coin.width/2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#FFA500';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    });
+
+    // --- DRAW ENEMIES ---
+    ctx.fillStyle = '#FF0000';
+    enemies.forEach(enemy => {
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        // Eyes
+        ctx.fillStyle = '#FFF';
+        ctx.fillRect(enemy.x + 5, enemy.y + 8, 6, 6);
+        ctx.fillRect(enemy.x + 14, enemy.y + 8, 6, 6);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(enemy.x + 7, enemy.y + 10, 3, 3);
+        ctx.fillRect(enemy.x + 16, enemy.y + 10, 3, 3);
+        ctx.fillStyle = '#FF0000';
+    });
+
+    // --- DRAW PLAYER (using custom colors!) ---
+    drawCharacter(ctx, player.x, player.y, player.width, player.height);
+
+    // Restore context (remove camera transform)
+    ctx.restore();
+}
