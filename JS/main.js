@@ -1,6 +1,14 @@
 const { version } = require("react");
 
+//Get the canvas contexts
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const previewCanvas = document.getElementById('preview-canvas');
+const previewCtx = previewCanvas.getContext('2d');
+
+
 // initializing the game score lives and the gameloop 
+// ======= Game State =======
 let score = 0;
 let lives = 3;
 let runningGame = true;
@@ -25,12 +33,21 @@ window.addEventListener('keydown', (e) => keys[e.key] = true); // when pressing 
 window.addEventListener('keyup', (e) => keys[e.key] = false);
 
 // Adding the plateform 
-const platform = [
-    {x: 0, y: 370, width: 800, height: 30},     // Ground
-    {x: 200, y: 290, width: 150, height: 20},   // Platform 1
-    {x: 450, y: 220, width: 150, height: 20},   // Platform 2
+const platforms = [
+    // Ground sections
+    {x: 0, y: 370, width: 400, height: 30},
+    {x: 500, y: 370, width: 400, height: 30},
+    {x: 1000, y: 370, width: 400, height: 30},
+    {x: 1500, y: 370, width: 400, height: 30},
+    {x: 2000, y: 370, width: 400, height: 30},
+    {x: 2500, y: 370, width: 500, height: 30},
+    
+    // Floating platforms
+    {x: 200, y: 290, width: 150, height: 20},
+    {x: 450, y: 220, width: 150, height: 20},
+    {x: 650, y: 150, width: 150, height: 20},
     // ... more platforms
-]
+];
 
 const enemyies = {
     x: 70,
