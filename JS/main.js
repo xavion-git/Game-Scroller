@@ -12,6 +12,16 @@ const previewCtx = previewCanvas.getContext('2d');
 let score = 0;
 let lives = 3;
 let runningGame = true;
+let camera = {x: 0, y: 0}; // camera position 
+const levelWidth = 3000; // Total level size
+
+// ======= Character Customization ========
+let characterColors = {
+    body: '#FF4444',
+    hat: '#CC0000', 
+    eyes: '#000000'
+};
+
 
 // Making a player object
 const player = {
