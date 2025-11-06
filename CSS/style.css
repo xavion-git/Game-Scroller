@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #5c94fc;
+    font-family: Arial, sans-serif;
+}
+canvas {
+    border: 4px solid #000;
+    background: #5c94fc;
+    display: block;
+}
+
+/* UI at top */
+#ui {
+    margin-top: 10px;
+    font-size: 20px;
+    color: white;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* Modal windows (popups) */
+.modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.95);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 600px;
+}
+
+/* Color buttons grid */
+.color-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+    /* Individual color button */
+.color-btn {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    border: 3px solid white;
+    cursor: pointer;
+    border-radius: 8px;
+    display: inline-block;
+    position: relative;
+    }
+
+.color-btn:hover {
+    transform: scale(1.1);
+    border-color: yellow;
+    }
+
+    /* Currently selected color */
+.color-btn.selected {
+    border-color: gold;
+    box-shadow: 0 0 10px gold;
+    }
+
+ /* Locked (not purchased) color */
+.color-btn.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Cost label on locked colors */
+.color-btn .cost {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #FFD700;
+}
