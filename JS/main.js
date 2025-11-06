@@ -379,3 +379,64 @@ function updatePreview() {
 function closeCustomize() {
     document.getElementById('customize').style.display = 'none';
 }
+
+function updateUI() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('lives').textContent = lives;
+}
+
+function loseLife() {
+    lives--;
+    updateUI();
+    if (lives <= 0) {
+        gameOver();
+    } else {
+        // Reset position
+        player.x = 100;
+        player.y = 300;
+        player.velX = 0;
+        player.velY = 0;
+        camera.x = 0;
+    }
+}
+
+function gameOver() {
+    gameRunning = false;
+    document.getElementById('gameOver').style.display = 'block';
+    document.getElementById('finalScore').textContent = 
+        `Final Score: ${score} | Distance: ${Math.floor(player.x/10)}m`;
+}
+
+function winGame() {
+    gameRunning = false;
+    document.getElementById('win').style.display = 'block';
+    document.getElementById('winScore').textContent = 
+        `You collected ${score} points and reached the goal!`;
+}
+
+function restartGame() {
+    score = 0;
+    lives = 3;
+    gameRunning = true;
+    player.x = 100;
+    player.y = 300;
+    player.velX = 0;
+    player.velY = 0;
+    camera.x = 0;
+    coins.forEach(coin => coin.collected = false);
+    document.getElementById('gameOver').style.display = 'none';
+    document.getElementById('win').style.display = 'none';
+    document.getElementById('customize').style.display = 'none';
+    updateUI();
+}
+
+// ===== MAIN GAME LOOP =====
+function gameLoop() {
+    update();  // Update physics and logic
+    draw();    // Draw everything
+    requestAnimationFrame(gameLoop);  // Run again next frame (~60fps)
+}
+
+// Start the game!
+updateUI();
+gameLoop();
