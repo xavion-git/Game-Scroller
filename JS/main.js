@@ -23,30 +23,30 @@ let characterColors = {
 };
 
 const colorOptions = {
-body: [
-    {color: '#FF4444', cost: 0, unlocked: true, name: 'Red'},
-    {color: '#4444FF', cost: 20, unlocked: false, name: 'Blue'},
-    {color: '#44FF44', cost: 30, unlocked: false, name: 'Green'},
-    {color: '#FF44FF', cost: 40, unlocked: false, name: 'Pink'},
-    {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
-    {color: '#FF8C00', cost: 30, unlocked: false, name: 'Orange'}
-],
-hat: [
-    {color: '#CC0000', cost: 0, unlocked: true, name: 'Dark Red'},
-    {color: '#0000CC', cost: 20, unlocked: false, name: 'Dark Blue'},
-    {color: '#00CC00', cost: 30, unlocked: false, name: 'Dark Green'},
-    {color: '#8B008B', cost: 40, unlocked: false, name: 'Purple'},
-    {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
-    {color: '#000000', cost: 30, unlocked: false, name: 'Black'}
-],
-eyes: [
-    {color: '#000000', cost: 0, unlocked: true, name: 'Black'},
-    {color: '#0000FF', cost: 10, unlocked: false, name: 'Blue'},
-    {color: '#00FF00', cost: 15, unlocked: false, name: 'Green'},
-    {color: '#FF0000', cost: 20, unlocked: false, name: 'Red'},
-    {color: '#FFFFFF', cost: 25, unlocked: false, name: 'White'},
-    {color: '#FFD700', cost: 30, unlocked: false, name: 'Gold'}
-]
+    body: [
+        {color: '#FF4444', cost: 0, unlocked: true, name: 'Red'},
+        {color: '#4444FF', cost: 20, unlocked: false, name: 'Blue'},
+        {color: '#44FF44', cost: 30, unlocked: false, name: 'Green'},
+        {color: '#FF44FF', cost: 40, unlocked: false, name: 'Pink'},
+        {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
+        {color: '#FF8C00', cost: 30, unlocked: false, name: 'Orange'}
+    ],
+    hat: [
+        {color: '#CC0000', cost: 0, unlocked: true, name: 'Dark Red'},
+        {color: '#0000CC', cost: 20, unlocked: false, name: 'Dark Blue'},
+        {color: '#00CC00', cost: 30, unlocked: false, name: 'Dark Green'},
+        {color: '#8B008B', cost: 40, unlocked: false, name: 'Purple'},
+        {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
+        {color: '#000000', cost: 30, unlocked: false, name: 'Black'}
+    ],
+    eyes: [
+        {color: '#000000', cost: 0, unlocked: true, name: 'Black'},
+        {color: '#0000FF', cost: 10, unlocked: false, name: 'Blue'},
+        {color: '#00FF00', cost: 15, unlocked: false, name: 'Green'},
+        {color: '#FF0000', cost: 20, unlocked: false, name: 'Red'},
+        {color: '#FFFFFF', cost: 25, unlocked: false, name: 'White'},
+        {color: '#FFD700', cost: 30, unlocked: false, name: 'Gold'}
+    ]
 };
 
 // Making a player object
@@ -85,13 +85,19 @@ const platforms = [
     // ... more platforms
 ];
 
-const enemyies = {
-    x: 70,
-    y: 600, 
-    width: 60,
-    height: 60,
-    velocityX: 10,
-    velocityY: 10,
-    speed: 5,
-    onTheGround: true
-};
+let coins = [
+    {x: 250, y: 250, width: 20, height: 20, collected: false},
+    {x: 500, y: 180, width: 20, height: 20, collected: false},// ... 15 coins total
+];
+
+// ===== GOAL FLAG =====
+const goal = {x: 2850, y: 270, width: 40, height: 100};
+
+// ===== ENEMIES =====
+let enemies = [
+    {x: 300, y: 340, width: 25, height: 25, velX: 2, minX: 200, maxX: 400},
+    {x: 500, y: 190, width: 25, height: 25, velX: 1.5, minX: 450, maxX: 600},
+    // ... more enemies
+];
+
+const gravity = 0.5;  // Gravity strength
