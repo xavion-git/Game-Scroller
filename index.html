@@ -8,15 +8,56 @@
     <script type="module" src="./JS/main.js"></script>
 </head>
 <body>
+    <!-- Main game canvas -->
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-<div id="ui">
-    <span>Score: <span id="score">0</span></span>
-    <span>Lives: <span id="lives">3</span></span>
-</div>
-<div id="gameOver">
-    <h2>Game Over!</h2>
-    <p id="finalScore"></p>
-    <button onclick="restartGame()">Play Again</button>
-</div>
-</body>
+    
+    <!-- Score/Lives display -->
+    <div id="ui">
+        <span>Score: <span id="score">0</span></span>
+        <span style="margin-left: 30px;">Lives: <span id="lives">3</span></span>
+        <span style="margin-left: 30px;">Distance: <span id="distance">0</span>m</span>
+    </div>
+    
+    <!-- Game Over screen -->
+    <div id="gameOver" class="modal">
+        <h2>Game Over!</h2>
+        <p id="finalScore"></p>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+    
+    <!-- Win screen -->
+    <div id="win" class="modal">
+        <h2>🎉 You Win! 🎉</h2>
+        <p id="winScore"></p>
+        <button onclick="showCustomize()">Customize Character</button>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
+
+    <!-- Customization screen -->
+    <div id="customize" class="modal">
+        <h2>Character Customization</h2>
+        <p>Coins Available: <span id="coinsAvailable">0</span> 💰</p>
+        
+        <!-- Preview canvas shows your character -->
+        <canvas id="preview-canvas" width="120" height="120"></canvas>
+        
+        <!-- Color selection grid -->
+        <div class="color-options">
+            <div class="color-section">
+                <h3>Body Color</h3>
+                <div id="bodyColors"></div>
+            </div>
+            <div class="color-section">
+                <h3>Hat Color</h3>
+                <div id="hatColors"></div>
+            </div>
+            <div class="color-section">
+                <h3>Eye Color</h3>
+                <div id="eyeColors"></div>
+            </div>
+        </div>
+        
+        <button onclick="closeCustomize()">Done</button>
+        <button onclick="restartGame()">Play Again</button>
+    </div>
 </html>
