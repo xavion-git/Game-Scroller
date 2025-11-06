@@ -99,5 +99,20 @@ let enemies = [
     {x: 500, y: 190, width: 25, height: 25, velX: 1.5, minX: 450, maxX: 600},
     // ... more enemies
 ];
-
 const gravity = 0.5;  // Gravity strength
+
+// ===== DRAW CHARACTER WITH CUSTOM COLORS =====
+function drawCharacter(context, x, y, width, height) {
+    // Draw body with custom color
+    context.fillStyle = characterColors.body;
+    context.fillRect(x, y, width, height);
+    
+    // Draw hat with custom color
+    context.fillStyle = characterColors.hat;
+    context.fillRect(x, y, width, 8);
+    
+    // Draw eyes with custom color
+    context.fillStyle = characterColors.eyes;
+    context.fillRect(x + 8, y + 12, 4, 4);  // Left eye
+    context.fillRect(x + 18, y + 12, 4, 4); // Right eye
+}
