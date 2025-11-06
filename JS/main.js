@@ -116,3 +116,17 @@ function drawCharacter(context, x, y, width, height) {
     context.fillRect(x + 8, y + 12, 4, 4);  // Left eye
     context.fillRect(x + 18, y + 12, 4, 4); // Right eye
 }
+// ===== UPDATE CAMERA TO FOLLOW PLAYER =====
+function updateCamera() {
+    // Calculate where camera should be (player centered)
+    const targetX = player.x - canvas.width / 2;
+    
+    // Smoothly move camera 10% toward target each frame
+    camera.x += (targetX - camera.x) * 0.1;
+    
+    // Don't go past level edges
+    if (camera.x < 0) camera.x = 0;
+    if (camera.x > levelWidth - canvas.width) {
+        camera.x = levelWidth - canvas.width;
+    }
+}
