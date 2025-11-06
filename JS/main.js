@@ -11,7 +11,7 @@ const previewCtx = previewCanvas.getContext('2d');
 // ======= Game State =======
 let score = 0;
 let lives = 3;
-let runningGame = true;
+let gameRunning = true;
 let camera = {x: 0, y: 0}; // camera position 
 const levelWidth = 3000; // Total level size
 
@@ -55,8 +55,8 @@ const player = {
     y: 300, 
     width: 30,      // The width/ hight of the player
     height: 30, 
-    velocityX: 0,   // The velocity of the player for the scrolling 
-    velocityY: 0, 
+    velX: 0,   // The velocity of the player for the scrolling 
+    velY: 0, 
     speed: 5,       // How fast the character
     jumpPower: 10,  // How high the character can jump
     onTheGround: false // is the player on the platform
@@ -129,4 +129,103 @@ function updateCamera() {
     if (camera.x > levelWidth - canvas.width) {
         camera.x = levelWidth - canvas.width;
     }
+}
+// ===== UPDATE GAME LOGIC (60 times per second) =====
+function update() {
+    if (!gameRunning) return;  // Stop if game over
+
+    // --- MOVEMENT ---
+    if (keys['ArrowLeft'] || keys['a']) {
+        player.velX = -player.speed;
+    } else if (keys['ArrowRight'] || keys['d']) {
+        player.velX = player.speed;
+    } else {
+        player.velX = 0;  // Stop if no keys pressed
+    }
+
+    // --- JUMPING ---
+    if ((keys['ArrowUp'] || keys['w'] || keys[' ']) && player.onGround) {
+        player.velY = -player.jumpPower;  // Negative = up
+        player.onGround = false;
+    }
+
+    // --- GRAVITY ---
+    player.velY += gravity;  // Accelerate downward
+    
+    // --- APPLY VELOCITY ---
+    player.x += player.velX;
+    player.y += player.velY;
+
+    // --- PLATFORM COLLISION ---
+    player.onGround = false;
+    platforms.forEach(platform => {
+        // Check if rectangles overlap
+        if (player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y < platform.y + platform.height &&
+            player.y + player.height > platform.y) {
+            
+            // If falling down and hitting from above
+            if (player.velY > 0 && player.y < platform.y) {
+                player.y = platform.y - player.height;  // Snap to top
+                player.velY = 0;                         // Stop falling
+                player.onGround = true;                  // Can jump again
+            }
+        }
+    });
+
+    // --- BOUNDARIES ---
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > levelWidth) {
+        player.x = levelWidth - player.width;
+    }
+    if (player.y > canvas.height) {
+        loseLife();  // Fell off bottom
+    }
+
+    // --- UPDATE CAMERA ---
+    updateCamera();
+
+    // --- COIN COLLECTION ---
+    coins.forEach(coin => {
+        if (!coin.collected &&
+            player.x < coin.x + coin.width &&
+            player.x + player.width > coin.x &&
+            player.y < coin.y + coin.height &&
+            player.y + player.height > coin.y) {
+            
+            coin.collected = true;
+            score += 10;
+            updateUI();
+        }
+    });
+
+    // --- CHECK GOAL ---
+    if (player.x < goal.x + goal.width &&
+        player.x + player.width > goal.x &&
+        player.y < goal.y + goal.height &&
+        player.y + player.height > goal.y) {
+        winGame();
+    }
+
+    // --- ENEMY MOVEMENT ---
+    enemies.forEach(enemy => {
+        enemy.x += enemy.velX;  // Move enemy
+        
+        // Bounce off boundaries
+        if (enemy.x <= enemy.minX || enemy.x >= enemy.maxX) {
+            enemy.velX *= -1;  // Reverse direction
+        }
+
+        // Check collision with player
+        if (player.x < enemy.x + enemy.width &&
+            player.x + player.width > enemy.x &&
+            player.y < enemy.y + enemy.height &&
+            player.y + player.height > enemy.y) {
+            loseLife();
+        }
+    });
+
+    // --- UPDATE DISTANCE ---
+    document.getElementById('distance').textContent = Math.floor(player.x / 10);
 }
