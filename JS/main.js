@@ -22,6 +22,32 @@ let characterColors = {
     eyes: '#000000'
 };
 
+const colorOptions = {
+body: [
+    {color: '#FF4444', cost: 0, unlocked: true, name: 'Red'},
+    {color: '#4444FF', cost: 20, unlocked: false, name: 'Blue'},
+    {color: '#44FF44', cost: 30, unlocked: false, name: 'Green'},
+    {color: '#FF44FF', cost: 40, unlocked: false, name: 'Pink'},
+    {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
+    {color: '#FF8C00', cost: 30, unlocked: false, name: 'Orange'}
+],
+hat: [
+    {color: '#CC0000', cost: 0, unlocked: true, name: 'Dark Red'},
+    {color: '#0000CC', cost: 20, unlocked: false, name: 'Dark Blue'},
+    {color: '#00CC00', cost: 30, unlocked: false, name: 'Dark Green'},
+    {color: '#8B008B', cost: 40, unlocked: false, name: 'Purple'},
+    {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
+    {color: '#000000', cost: 30, unlocked: false, name: 'Black'}
+],
+eyes: [
+    {color: '#000000', cost: 0, unlocked: true, name: 'Black'},
+    {color: '#0000FF', cost: 10, unlocked: false, name: 'Blue'},
+    {color: '#00FF00', cost: 15, unlocked: false, name: 'Green'},
+    {color: '#FF0000', cost: 20, unlocked: false, name: 'Red'},
+    {color: '#FFFFFF', cost: 25, unlocked: false, name: 'White'},
+    {color: '#FFD700', cost: 30, unlocked: false, name: 'Gold'}
+]
+};
 
 // Making a player object
 const player = {
