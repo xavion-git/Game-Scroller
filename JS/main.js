@@ -30,14 +30,21 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const previewCanvas = document.getElementById('preview-canvas');
 const previewCtx = previewCanvas.getContext('2d');
+const titlePreviewCanvas = document.getElementById('title-preview-canvas');
+const titlePreviewCtx = titlePreviewCanvas.getContext('2d');
 
+// Initialize canvas size
 resizeCanvas();
+
+// Resize on window resize
+window.addEventListener('resize', resizeCanvas);
 
 // initializing the game score lives and the gameloop 
 // ======= Game State =======
 let score = 0;
 let lives = 3;
-let gameRunning = true;
+let gameRunning = false;  // Changed to false - game starts paused
+let gameStarted = false;   // Track if game has been started
 let camera = {x: 0, y: 0}; // camera position 
 const levelWidth = 3000; // Total level size
 
@@ -85,7 +92,7 @@ const player = {
     velY: 0, 
     speed: 5,       // How fast the character
     jumpPower: 10,  // How high the character can jump
-    onTheGround: false // is the player on the platform
+    onGround: false // is the player on the platform
 };
 
 /**adding the contorls*/
@@ -162,26 +169,57 @@ const goal = {x: 2850, y: 270, width: 40, height: 100};
 
 // ===== ENEMIES =====
 let enemies = [
+    // Early enemies
     {x: 300, y: 340, width: 25, height: 25, velX: 2, minX: 200, maxX: 400},
     {x: 500, y: 190, width: 25, height: 25, velX: 1.5, minX: 450, maxX: 600},
-    // ... more enemies
+    
+    // Middle section enemies
+    {x: 900, y: 250, width: 25, height: 25, velX: 2.5, minX: 850, maxX: 970},
+    {x: 1100, y: 340, width: 25, height: 25, velX: 1.8, minX: 1000, maxX: 1200},
+    {x: 1450, y: 150, width: 25, height: 25, velX: 2, minX: 1400, maxX: 1530},
+    
+    // Later enemies (faster/harder)
+    {x: 1650, y: 210, width: 25, height: 25, velX: 3, minX: 1600, maxX: 1750},
+    {x: 2000, y: 340, width: 25, height: 25, velX: 2.2, minX: 1950, maxX: 2100},
+    {x: 2200, y: 130, width: 25, height: 25, velX: 2.8, minX: 2150, maxX: 2300},
+    
+    // Final gauntlet
+    {x: 2550, y: 170, width: 25, height: 25, velX: 3.5, minX: 2500, maxX: 2620},
+    {x: 2700, y: 220, width: 25, height: 25, velX: 3, minX: 2620, maxX: 2760}
 ];
 const gravity = 0.5;  // Gravity strength
 
-// ===== DRAW CHARACTER WITH CUSTOM COLORS =====
+// ===== LOAD PLAYER IMAGE =====
+const playerImage = new Image();
+playerImage.src = 'img/pixel_art_small.png';  // CHANGE THIS to your image path
+let imageLoaded = false;
+
+playerImage.onload = function() {
+    imageLoaded = true;
+    console.log('Player image loaded successfully!');
+};
+
+playerImage.onerror = function() {
+    console.error('Failed to load player image. Using default character.');
+};
+
+// ===== DRAW CHARACTER WITH CUSTOM COLORS OR IMAGE =====
 function drawCharacter(context, x, y, width, height) {
-    // Draw body with custom color
-    context.fillStyle = characterColors.body;
-    context.fillRect(x, y, width, height);
-    
-    // Draw hat with custom color
-    context.fillStyle = characterColors.hat;
-    context.fillRect(x, y, width, 8);
-    
-    // Draw eyes with custom color
-    context.fillStyle = characterColors.eyes;
-    context.fillRect(x + 8, y + 12, 4, 4);  // Left eye
-    context.fillRect(x + 18, y + 12, 4, 4); // Right eye
+    // If image is loaded, draw the image
+    if (imageLoaded) {
+        context.drawImage(playerImage, x, y, width, height);
+    } else {
+        // Fallback: Draw default character with custom colors
+        context.fillStyle = characterColors.body;
+        context.fillRect(x, y, width, height);
+        
+        context.fillStyle = characterColors.hat;
+        context.fillRect(x, y, width, 8);
+        
+        context.fillStyle = characterColors.eyes;
+        context.fillRect(x + 8, y + 12, 4, 4);
+        context.fillRect(x + 18, y + 12, 4, 4);
+    }
 }
 // ===== UPDATE CAMERA TO FOLLOW PLAYER =====
 function updateCamera() {
@@ -303,6 +341,20 @@ function draw() {
     ctx.fillStyle = '#5c94fc';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // If game hasn't started, draw gradient overlay and return
+    if (!gameStarted) {
+        // Create gradient from light blue at top to transparent at bottom
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, 'rgba(135, 206, 250, 0.8)');  // Light blue at top
+        gradient.addColorStop(0.3, 'rgba(135, 206, 250, 0.5)');
+        gradient.addColorStop(0.6, 'rgba(135, 206, 250, 0.2)');
+        gradient.addColorStop(1, 'rgba(135, 206, 250, 0)');     // Transparent at bottom
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return;  // Don't draw game elements before start
+    }
+
     // Save context state
     ctx.save();
     
@@ -379,6 +431,14 @@ function setupCustomization() {
     // For each part (body, hat, eyes)
     ['body', 'hat', 'eyes'].forEach(part => {
         const container = document.getElementById(part + 'Colors');
+        
+        // Safety check - if element doesn't exist, show error
+        if (!container) {
+            console.error(`Missing element with id: ${part}Colors`);
+            alert(`Error: Missing HTML element "${part}Colors". Please check your HTML file.`);
+            return;
+        }
+        
         container.innerHTML = '';  // Clear previous buttons
         
         // Create a button for each color option
@@ -443,6 +503,23 @@ function updatePreview() {
     drawCharacter(previewCtx, 45, 45, 30, 30);
 }
 
+// ===== UPDATE TITLE PREVIEW =====
+function updateTitlePreview() {
+    // Clear preview
+    titlePreviewCtx.fillStyle = '#5c94fc';
+    titlePreviewCtx.fillRect(0, 0, titlePreviewCanvas.width, titlePreviewCanvas.height);
+    
+    // Draw character in center
+    drawCharacter(titlePreviewCtx, 45, 45, 30, 30);
+}
+
+// ===== START THE GAME =====
+function startGame() {
+    document.getElementById('startScreen').style.display = 'none';
+    gameRunning = true;
+    gameStarted = true;
+}
+
 function closeCustomize() {
     document.getElementById('customize').style.display = 'none';
 }
@@ -482,9 +559,11 @@ function winGame() {
 }
 
 function restartGame() {
+    // Reset all game variables
     score = 0;
     lives = 3;
     gameRunning = true;
+    gameStarted = true;
     player.x = 100;
     player.y = 300;
     player.velX = 0;
@@ -494,6 +573,7 @@ function restartGame() {
     document.getElementById('gameOver').style.display = 'none';
     document.getElementById('win').style.display = 'none';
     document.getElementById('customize').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'none';
     updateUI();
 }
 
@@ -504,6 +584,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);  // Run again next frame (~60fps)
 }
 
-// Start the game!
+// Start the game loop and show title screen
 updateUI();
+updateTitlePreview();  // Draw character on title screen
 gameLoop();
