@@ -111,3 +111,69 @@ canvas {
     display: block;
     background: #5c94fc;
 }
+
+/* Character Selection Grid */
+.character-selection {
+    margin: 20px 0;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.character-card {
+    border: 3px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.character-card:hover {
+    transform: scale(1.05);
+    border-color: yellow;
+}
+
+.character-card.selected {
+    border-color: gold;
+    box-shadow: 0 0 15px gold;
+    background: rgba(255, 215, 0, 0.2);
+}
+
+.character-card.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.character-preview {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.character-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.character-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.character-card .cost {
+    color: #FFD700;
+    font-size: 12px;
+    font-weight: bold;
+}

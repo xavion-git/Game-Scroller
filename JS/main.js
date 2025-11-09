@@ -501,6 +501,7 @@ function showCustomize() {
     document.getElementById('win').style.display = 'none';
     document.getElementById('customize').style.display = 'block';
     document.getElementById('coinsAvailable').textContent = score;
+    setupCharacterSelection();
     updatePreview();       // Draw preview
 }
 
