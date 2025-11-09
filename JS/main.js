@@ -49,45 +49,153 @@ let camera = {x: 0, y: 0}; // camera position
 const levelWidth = 3000; // Total level size
 
 // ======= Character Customization ========
-let characterColors = {
-    body: '#FF4444',
-    hat: '#CC0000', 
-    eyes: '#000000'
-};
+let currentCharacter = 'default';
 
-const colorOptions = {
-    body: [
-        {color: '#FF4444', cost: 0, unlocked: true, name: 'Red'},
-        {color: '#4444FF', cost: 20, unlocked: false, name: 'Blue'},
-        {color: '#44FF44', cost: 30, unlocked: false, name: 'Green'},
-        {color: '#FF44FF', cost: 40, unlocked: false, name: 'Pink'},
-        {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
-        {color: '#FF8C00', cost: 30, unlocked: false, name: 'Orange'}
-    ],
-    hat: [
-        {color: '#CC0000', cost: 0, unlocked: true, name: 'Dark Red'},
-        {color: '#0000CC', cost: 20, unlocked: false, name: 'Dark Blue'},
-        {color: '#00CC00', cost: 30, unlocked: false, name: 'Dark Green'},
-        {color: '#8B008B', cost: 40, unlocked: false, name: 'Purple'},
-        {color: '#FFD700', cost: 50, unlocked: false, name: 'Gold'},
-        {color: '#000000', cost: 30, unlocked: false, name: 'Black'}
-    ],
-    eyes: [
-        {color: '#000000', cost: 0, unlocked: true, name: 'Black'},
-        {color: '#0000FF', cost: 10, unlocked: false, name: 'Blue'},
-        {color: '#00FF00', cost: 15, unlocked: false, name: 'Green'},
-        {color: '#FF0000', cost: 20, unlocked: false, name: 'Red'},
-        {color: '#FFFFFF', cost: 25, unlocked: false, name: 'White'},
-        {color: '#FFD700', cost: 30, unlocked: false, name: 'Gold'}
-    ]
-};
+// Simplified character options - no color customization
+const characterOptions = [
+    { 
+        id: 'default', 
+        name: 'Classic', 
+        cost: 0, 
+        unlocked: true, 
+        image: 'img/pixel_art_small.png',
+        previewColor: '#FF4444'
+    },
+    { 
+        id: 'warrior', 
+        name: 'Warrior', 
+        cost: 50, 
+        unlocked: false, 
+        image: 'img/pixel_art_large.png',
+        previewColor: '#8B4513'
+    },
+    { 
+        id: 'mage', 
+        name: 'Mage', 
+        cost: 75, 
+        unlocked: false, 
+        image: 'img/mage-prince.png',
+        previewColor: '#4B0082'
+    },
+    { 
+        id: 'rogue', 
+        name: 'Rogue', 
+        cost: 60, 
+        unlocked: false, 
+        image: 'img/rogue-prince.png',
+        previewColor: '#2F4F4F'
+    }
+];
+
+// Preload character images
+const characterImages = {};
+function preloadCharacterImages() {
+    characterOptions.forEach(char => {
+        const img = new Image();
+        img.src = char.image;
+        characterImages[char.id] = img;
+    });
+}
+
+preloadCharacterImages();
+
+// ===== DRAW CHARACTER WITH SELECTED IMAGE OR FALLBACK =====
+function drawCharacter(context, x, y, width, height) {
+    const selectedChar = characterOptions.find(c => c.id === currentCharacter);
+    
+    // Try to draw the selected character image
+    if (characterImages[currentCharacter] && characterImages[currentCharacter].complete) {
+        context.drawImage(characterImages[currentCharacter], x, y, width, height);
+    } else {
+        // Fallback: Simple colored rectangle using the character's preview color
+        console.log(`Using fallback for character: ${currentCharacter}`);
+        context.fillStyle = selectedChar ? selectedChar.previewColor : '#FF4444';
+        context.fillRect(x, y, width, height);
+        
+        // Optional: Add simple features to make it look like a character
+        context.fillStyle = '#000000'; // Black for eyes
+        context.fillRect(x + 10, y + 15, 4, 4);
+        context.fillRect(x + 26, y + 15, 4, 4);
+    }
+}
+// ===== SHOW CUSTOMIZATION SCREEN =====
+function showCustomize() {
+    document.getElementById('win').style.display = 'none';
+    document.getElementById('customize').style.display = 'block';
+    document.getElementById('coinsAvailable').textContent = score;
+    setupCharacterSelection();  // Only setup character selection
+    updatePreview();            // Draw preview
+}
+
+// ===== CREATE CHARACTER SELECTION =====
+function setupCharacterSelection() {
+    const container = document.getElementById('characterSelection');
+    
+    container.innerHTML = '<h3>Select Character</h3>';
+    
+    const charGrid = document.createElement('div');
+    charGrid.className = 'character-grid';
+    
+    characterOptions.forEach((character, index) => {
+        const charCard = document.createElement('div');
+        charCard.className = 'character-card';
+        
+        if (currentCharacter === character.id) {
+            charCard.classList.add('selected');
+        }
+        
+        if (!character.unlocked) {
+            charCard.classList.add('locked');
+        }
+        
+        charCard.innerHTML = `
+            <div class="character-preview" style="background-color: ${character.previewColor}">
+                ${character.unlocked || character.cost === 0 ? 
+                  `<img src="${character.image}" alt="${character.name}" onerror="this.style.display='none'">` : 
+                  '🔒'}
+            </div>
+            <div class="character-name">${character.name}</div>
+            ${!character.unlocked ? `<div class="cost">${character.cost} 💰</div>` : ''}
+        `;
+        
+        charCard.onclick = () => selectCharacter(index);
+        charGrid.appendChild(charCard);
+    });
+    
+    container.appendChild(charGrid);
+}
+
+// ===== SELECT/PURCHASE A CHARACTER =====
+function selectCharacter(index) {
+    const character = characterOptions[index];
+    
+    // If not unlocked yet, try to purchase
+    if (!character.unlocked) {
+        if (score >= character.cost) {
+            // Purchase it!
+            score -= character.cost;
+            character.unlocked = true;
+            document.getElementById('coinsAvailable').textContent = score;
+            document.getElementById('score').textContent = score;
+        } else {
+            // Not enough coins
+            alert(`Not enough coins! Need ${character.cost} coins to unlock ${character.name}.`);
+            return;
+        }
+    }
+    
+    // Apply the character
+    currentCharacter = character.id;
+    setupCharacterSelection();  // Refresh character selection
+    updatePreview();            // Update preview
+}
 
 // Making a player object
 const player = {
     x: 50,          // The position on the screen on the x and y
     y: 300, 
-    width: 60,      // The width/ hight of the player
-    height: 60, 
+    width: 40,      // The width/ hight of the player
+    height: 40, 
     velX: 0,   // The velocity of the player for the scrolling 
     velY: 0, 
     speed: 5,       // How fast the character
@@ -191,36 +299,7 @@ const gravity = 0.5;  // Gravity strength
 
 // ===== LOAD PLAYER IMAGE =====
 const playerImage = new Image();
-playerImage.src = 'img/pixel_art_large.png';  // CHANGE THIS to your image path
-let imageLoaded = false;
 
-playerImage.onload = function() {
-    imageLoaded = true;
-    console.log('Player image loaded successfully!');
-};
-
-playerImage.onerror = function() {
-    console.error('Failed to load player image. Using default character.');
-};
-
-// ===== DRAW CHARACTER WITH CUSTOM COLORS OR IMAGE =====
-function drawCharacter(context, x, y, width, height) {
-    // If image is loaded, draw the image
-    if (imageLoaded) {
-        context.drawImage(playerImage, x, y, width, height);
-    } else {
-        // Fallback: Draw default character with custom colors
-        context.fillStyle = characterColors.body;
-        context.fillRect(x, y, width, height);
-        
-        context.fillStyle = characterColors.hat;
-        context.fillRect(x, y, width, 8);
-        
-        context.fillStyle = characterColors.eyes;
-        context.fillRect(x + 8, y + 12, 4, 4);
-        context.fillRect(x + 18, y + 12, 4, 4);
-    }
-}
 // ===== UPDATE CAMERA TO FOLLOW PLAYER =====
 function updateCamera() {
     // Calculate where camera should be (player centered)
@@ -422,76 +501,9 @@ function showCustomize() {
     document.getElementById('win').style.display = 'none';
     document.getElementById('customize').style.display = 'block';
     document.getElementById('coinsAvailable').textContent = score;
-    setupCustomization();  // Create color buttons
     updatePreview();       // Draw preview
 }
 
-// ===== CREATE COLOR SELECTION BUTTONS =====  
-function setupCustomization() {
-    // For each part (body, hat, eyes)
-    ['body', 'hat', 'eyes'].forEach(part => {
-        const container = document.getElementById(part + 'Colors');
-        
-        // Safety check - if element doesn't exist, show error
-        if (!container) {
-            console.error(`Missing element with id: ${part}Colors`);
-            alert(`Error: Missing HTML element "${part}Colors". Please check your HTML file.`);
-            return;
-        }
-        
-        container.innerHTML = '';  // Clear previous buttons
-        
-        // Create a button for each color option
-        colorOptions[part].forEach((option, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'color-btn';
-            btn.style.backgroundColor = option.color;
-            
-            // Mark currently selected color
-            if (characterColors[part] === option.color) {
-                btn.classList.add('selected');
-            }
-            
-            // If not unlocked, show cost and lock it
-            if (!option.unlocked) {
-                btn.classList.add('locked');
-                const cost = document.createElement('div');
-                cost.className = 'cost';
-                cost.textContent = option.cost + ' 💰';
-                btn.appendChild(cost);
-            }
-            
-            // Click handler
-            btn.onclick = () => selectColor(part, index);
-            container.appendChild(btn);
-        });
-    });
-}
-
-// ===== SELECT/PURCHASE A COLOR =====
-function selectColor(part, index) {
-    const option = colorOptions[part][index];
-    
-    // If not unlocked yet, try to purchase
-    if (!option.unlocked) {
-        if (score >= option.cost) {
-            // Purchase it!
-            score -= option.cost;
-            option.unlocked = true;
-            document.getElementById('coinsAvailable').textContent = score;
-            document.getElementById('score').textContent = score;
-        } else {
-            // Not enough coins
-            alert('Not enough coins! Need ' + option.cost + ' coins.');
-            return;
-        }
-    }
-    
-    // Apply the color
-    characterColors[part] = option.color;
-    setupCustomization();  // Refresh buttons (to show selection)
-    updatePreview();       // Update preview
-}
 
 // ===== UPDATE PREVIEW CANVAS =====
 function updatePreview() {

@@ -47,27 +47,18 @@
     <div id="customize" class="modal">
         <h2>Character Customization</h2>
         <p>Coins Available: <span id="coinsAvailable">0</span> 💰</p>
+    
+        <!-- Character Preview -->
         <canvas id="preview-canvas" width="120" height="120"></canvas>
-        
-        <div class="color-section">
-            <h3>Body Color</h3>
-            <div id="bodyColors"></div>
-        </div>
-        
-        <div class="color-section">
-            <h3>Hat Color</h3>
-            <div id="hatColors"></div>
-        </div>
-        
-        <div class="color-section">
-            <h3>Eye Color</h3>
-            <div id="eyeColors"></div>
-        </div>
-        
+    
+    <!-- Character Selection Only -->
+    <div id="characterSelection" class="character-selection"></div>
+    
+        <!-- REMOVED all color customization sections -->
+    
         <button onclick="closeCustomize()">Done</button>
         <button onclick="restartGame()">Play Again</button>
     </div>
-
     <script src="JS/main.js"></script>
 </body>
 </html>
