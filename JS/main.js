@@ -86,8 +86,8 @@ const colorOptions = {
 const player = {
     x: 50,          // The position on the screen on the x and y
     y: 300, 
-    width: 30,      // The width/ hight of the player
-    height: 30, 
+    width: 60,      // The width/ hight of the player
+    height: 60, 
     velX: 0,   // The velocity of the player for the scrolling 
     velY: 0, 
     speed: 5,       // How fast the character
@@ -191,7 +191,7 @@ const gravity = 0.5;  // Gravity strength
 
 // ===== LOAD PLAYER IMAGE =====
 const playerImage = new Image();
-playerImage.src = 'img/pixel_art_small.png';  // CHANGE THIS to your image path
+playerImage.src = 'img/pixel_art_large.png';  // CHANGE THIS to your image path
 let imageLoaded = false;
 
 playerImage.onload = function() {
