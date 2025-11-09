@@ -1,4 +1,29 @@
-const { version } = require("react");
+// Responsive canvas sizing
+let canvasWidth = 800;
+let canvasHeight = 400;
+
+function resizeCanvas() {
+    // Get window dimensions
+    const maxWidth = window.innerWidth - 40; // Leave some margin
+    const maxHeight = window.innerHeight - 150; // Leave space for UI
+    
+    // Maintain 2:1 aspect ratio
+    const aspectRatio = 2;
+    
+    if (maxWidth / maxHeight > aspectRatio) {
+        // Height is the limiting factor
+        canvasHeight = maxHeight;
+        canvasWidth = canvasHeight * aspectRatio;
+    } else {
+        // Width is the limiting factor
+        canvasWidth = maxWidth;
+        canvasHeight = canvasWidth / aspectRatio;
+    }
+    
+    // Set canvas size
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+}
 
 //Get the canvas contexts
 const canvas = document.getElementById('gameCanvas');
@@ -6,6 +31,7 @@ const ctx = canvas.getContext('2d');
 const previewCanvas = document.getElementById('preview-canvas');
 const previewCtx = previewCanvas.getContext('2d');
 
+resizeCanvas();
 
 // initializing the game score lives and the gameloop 
 // ======= Game State =======

@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Scoller</title>
-    <link rel="stylesheet" href="/CSS/style.css">
-    <script type="module" src="./JS/main.js"></script>
+    <title>Mario-like Game with Customization</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Main game canvas -->
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    
-    <!-- Score/Lives display -->
     <div id="ui">
         <span>Score: <span id="score">0</span></span>
         <span style="margin-left: 30px;">Lives: <span id="lives">3</span></span>
         <span style="margin-left: 30px;">Distance: <span id="distance">0</span>m</span>
     </div>
     
-    <!-- Game Over screen -->
     <div id="gameOver" class="modal">
         <h2>Game Over!</h2>
         <p id="finalScore"></p>
         <button onclick="restartGame()">Play Again</button>
     </div>
     
-    <!-- Win screen -->
     <div id="win" class="modal">
         <h2>🎉 You Win! 🎉</h2>
         <p id="winScore"></p>
@@ -33,15 +27,11 @@
         <button onclick="restartGame()">Play Again</button>
     </div>
 
-    <!-- Customization screen -->
     <div id="customize" class="modal">
         <h2>Character Customization</h2>
         <p>Coins Available: <span id="coinsAvailable">0</span> 💰</p>
-        
-        <!-- Preview canvas shows your character -->
         <canvas id="preview-canvas" width="120" height="120"></canvas>
         
-        <!-- Color selection grid -->
         <div class="color-options">
             <div class="color-section">
                 <h3>Body Color</h3>
@@ -60,4 +50,7 @@
         <button onclick="closeCustomize()">Done</button>
         <button onclick="restartGame()">Play Again</button>
     </div>
+
+    <script src="JS/main.js"></script>
+</body>
 </html>
