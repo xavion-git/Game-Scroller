@@ -104,16 +104,57 @@ const platforms = [
     {x: 2000, y: 370, width: 400, height: 30},
     {x: 2500, y: 370, width: 500, height: 30},
     
-    // Floating platforms
+    // Floating platforms - Section 1
     {x: 200, y: 290, width: 150, height: 20},
     {x: 450, y: 220, width: 150, height: 20},
     {x: 650, y: 150, width: 150, height: 20},
-    // ... more platforms
+    
+    // Floating platforms - Section 2
+    {x: 850, y: 280, width: 120, height: 20},
+    {x: 1050, y: 200, width: 100, height: 20},
+    {x: 1200, y: 260, width: 140, height: 20},
+    
+    // Floating platforms - Section 3
+    {x: 1400, y: 180, width: 130, height: 20},
+    {x: 1600, y: 240, width: 110, height: 20},
+    {x: 1750, y: 300, width: 150, height: 20},
+    
+    // Floating platforms - Section 4
+    {x: 1950, y: 220, width: 120, height: 20},
+    {x: 2150, y: 160, width: 100, height: 20},
+    {x: 2300, y: 280, width: 140, height: 20},
+    
+    // Final challenging section
+    {x: 2500, y: 200, width: 80, height: 20},
+    {x: 2620, y: 250, width: 80, height: 20},
+    {x: 2740, y: 200, width: 100, height: 20}
 ];
 
 let coins = [
+    // Section 1 - Early game
     {x: 250, y: 250, width: 20, height: 20, collected: false},
-    {x: 500, y: 180, width: 20, height: 20, collected: false},// ... 15 coins total
+    {x: 500, y: 180, width: 20, height: 20, collected: false},
+    {x: 700, y: 110, width: 20, height: 20, collected: false},
+    
+    // Section 2 - Middle area
+    {x: 900, y: 240, width: 20, height: 20, collected: false},
+    {x: 1100, y: 160, width: 20, height: 20, collected: false},
+    {x: 1250, y: 220, width: 20, height: 20, collected: false},
+    
+    // Section 3
+    {x: 1450, y: 140, width: 20, height: 20, collected: false},
+    {x: 1650, y: 200, width: 20, height: 20, collected: false},
+    {x: 1800, y: 260, width: 20, height: 20, collected: false},
+    
+    // Section 4
+    {x: 2000, y: 180, width: 20, height: 20, collected: false},
+    {x: 2200, y: 120, width: 20, height: 20, collected: false},
+    {x: 2350, y: 240, width: 20, height: 20, collected: false},
+    
+    // Final section - harder to get
+    {x: 2550, y: 160, width: 20, height: 20, collected: false},
+    {x: 2670, y: 210, width: 20, height: 20, collected: false},
+    {x: 2790, y: 160, width: 20, height: 20, collected: false}
 ];
 
 // ===== GOAL FLAG =====
